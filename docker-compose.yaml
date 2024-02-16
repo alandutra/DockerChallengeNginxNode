@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+
+  node:
+    build:
+      context: ./node
+      dockerfile: Dockerfile.prod
+    image: alandutra1982/node:prod
+    container_name: node
+    networks:
+      - node-nginx-network
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.prod
+    image: alandutra1982/nginx:prod
+    container_name: nginx
+    networks: 
+      - node-nginx-network
+    ports:
+      - "8080:80"
+
+  db:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0 # sempre é necessário aplicar esse comando
+    container_name: db
+    restart: always # se o container cair restarta o container
+    tty: true
+    volumes:
+      - /mysql_fullcycle:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - node-nginx-network 
+    depends_on:
+      - nginx
+
+networks:
+  node-nginx-network:
+    driver: bridge
+
