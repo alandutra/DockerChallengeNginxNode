@@ -5,9 +5,12 @@ services:
   node:
     build:
       context: ./node
-      dockerfile: Dockerfile.prod
+      #dockerfile: Dockerfile.prod
     image: alandutra1982/node:prod
     container_name: node
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 60s sh -c "npm install && node index.js"
+    volumes:
+      - ./node:/usr/src/app
     networks:
       - node-nginx-network
     ports:
@@ -18,13 +21,17 @@ services:
   nginx:
     build:
       context: ./nginx
-      dockerfile: Dockerfile.prod
+      #dockerfile: Dockerfile.prod
     image: alandutra1982/nginx:prod
     container_name: nginx
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
     networks: 
       - node-nginx-network
     ports:
       - "8080:80"
+    depends_on:
+      - node
 
   db:
     image: mysql:5.7
@@ -33,14 +40,13 @@ services:
     restart: always # se o container cair restarta o container
     tty: true
     volumes:
-      - /mysql_fullcycle:/var/lib/mysql
+      #- ./mysql:/var/lib/mysql
+      - /mysql:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=nodedb
       - MYSQL_ROOT_PASSWORD=root
     networks:
       - node-nginx-network 
-    depends_on:
-      - nginx
 
 networks:
   node-nginx-network:
