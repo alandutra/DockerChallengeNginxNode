@@ -19,24 +19,6 @@ app.use(express.json());
 const mysql = require('mysql')
 const connection = mysql.createConnection(config)
 
-connection.connect((err) => {
-    if (err) {
-      console.error("Erro ao conectar ao banco de dados:", err);
-    } else {
-      console.log("Conectado ao banco de dados");
-  
-      const createTable = "create table if not exists people (id int auto_increment primary key, name varchar(255) not null)";
-  
-      connection.query(createTable, (error) => {
-        if (error) {
-          console.error("Erro ao criar a tabela: ", error);
-        } else {          
-          console.log("Tabela criada com sucesso!");
-        }
-      });
-    }
-});
-
 app.post('/inserir-nome', async (req, res) => {  
     const name = req.body.name; // Capturar o parâmetro da URL    
     console.log('Name passado pelo body:', name);
