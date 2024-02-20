@@ -3,7 +3,10 @@ version: '3'
 services:
 
   node:
-    image: alandutra1982/node:prod
+    build: 
+      context: ./node
+      dockerfile: Dockerfile
+    image: alandutra1982/node
     container_name: node
     entrypoint: dockerize -wait tcp://db:3306 -timeout 60s sh -c "npm install && node index.js"
     volumes:
@@ -15,8 +18,11 @@ services:
     depends_on:
       - db
 
-  nginx:   
-    image: alandutra1982/nginx:prod
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: alandutra1982/nginx
     container_name: nginx
     volumes:
       - ./nginx:/etc/nginx/conf.d
@@ -34,7 +40,6 @@ services:
     restart: always # se o container cair restarta o container
     tty: true
     volumes:
-      #- /mysql:/var/lib/mysql
       - ./node/.docker/mysql:/docker-entrypoint-initdb.d
     environment:
       - MYSQL_DATABASE=nodedb
