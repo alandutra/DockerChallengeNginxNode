@@ -1,0 +1,37 @@
+{
+	"info": {
+		"_postman_id": "901463d4-983c-4ce0-b746-380533be0104",
+		"name": "FullCycle",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4637564"
+	},
+	"item": [
+		{
+			"name": "Inserir Nome",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Marcio Teste\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/inserir-nome",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inserir-nome"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
